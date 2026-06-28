@@ -1,0 +1,705 @@
+/* ============================================================
+   EMRS Design Tokens
+   ============================================================ */
+:root {
+  /* Brand */
+  --clr-primary:       #1565a8;
+  --clr-primary-dark:  #0d4275;
+  --clr-primary-light: #e3f0fb;
+  --clr-accent:        #2e9ec7;
+
+  /* Sidebar */
+  --clr-sidebar:       #0d2137;
+  --clr-sidebar-text:  #8cb5cc;
+  --clr-sidebar-hover: #ffffff;
+  --clr-sidebar-active:#3a9fd6;
+
+  /* Surfaces */
+  --clr-surface: #ffffff;
+  --clr-bg:      #f0f4f8;
+
+  /* Text */
+  --clr-text:       #1c2e3e;
+  --clr-text-2:     #4a6275;
+  --clr-text-muted: #7a97a8;
+
+  /* Borders / status */
+  --clr-border:  #ccd9e3;
+  --clr-error:   #c0392b;
+  --clr-success: #1a7a45;
+
+  /* Shadows */
+  --shadow-sm:   0 1px 3px rgba(13,33,55,0.08);
+  --shadow-md:   0 4px 12px rgba(13,33,55,0.10);
+  --shadow-card: 0 2px 8px rgba(13,33,55,0.09);
+  --shadow-lg:   0 8px 24px rgba(13,33,55,0.13);
+
+  /* Radii */
+  --radius:    8px;
+  --radius-lg: 12px;
+
+  /* Motion */
+  --transition: 150ms ease;
+}
+
+/* ============================================================
+   Base
+   ============================================================ */
+body {
+  margin: 0;
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: var(--clr-text);
+  background-color: var(--clr-bg);
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* ============================================================
+   Upper bar
+   ============================================================ */
+.upper-bar {
+  height: 60px;
+  background-color: var(--clr-surface);
+  border-bottom: 1px solid var(--clr-border);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 24px;
+  box-shadow: var(--shadow-sm);
+  flex-shrink: 0;
+}
+
+.upper-bar-btn {
+  padding: 8px 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  background-color: transparent;
+  color: var(--clr-text-2);
+  border: 1.5px solid var(--clr-border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background-color var(--transition), color var(--transition),
+    border-color var(--transition);
+  font-family: inherit;
+}
+
+.upper-bar-btn:hover {
+  background-color: var(--clr-primary);
+  color: #fff;
+  border-color: var(--clr-primary);
+}
+
+/* ============================================================
+   Profile pages (patient + doctor)
+   ============================================================ */
+.profile-wrapper {
+  padding: 36px 40px;
+}
+
+.profile-name {
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: var(--clr-text);
+  margin-bottom: 28px;
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  margin-bottom: 32px;
+}
+
+.profile-field {
+  padding: 20px 24px;
+  border-right: 1px solid var(--clr-border);
+  border-bottom: 1px solid var(--clr-border);
+}
+
+.profile-field:nth-child(3n) {
+  border-right: none;
+}
+
+.profile-field-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--clr-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 5px;
+}
+
+.profile-field-value {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--clr-text);
+}
+
+/* ============================================================
+   Shared table + list container
+   ============================================================ */
+.list-container {
+  padding: 32px 40px;
+}
+
+.list-container .table {
+  background: var(--clr-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  margin-bottom: 0;
+}
+
+.list-container .table thead th {
+  background-color: var(--clr-primary) !important;
+  color: #fff !important;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 14px 16px;
+  border: none !important;
+}
+
+.list-container .table tbody td {
+  padding: 12px 16px;
+  vertical-align: middle;
+  border-color: var(--clr-border);
+  font-size: 0.9rem;
+  color: var(--clr-text);
+}
+
+.list-container .table tbody tr:hover {
+  background-color: var(--clr-primary-light);
+}
+
+.list-container .table caption {
+  font-size: 0.78rem;
+  color: var(--clr-text-muted);
+  padding: 10px 16px;
+  caption-side: bottom;
+}
+
+/* Pagination */
+.pag-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.pag-btn {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1.5px solid var(--clr-border);
+  background: var(--clr-surface);
+  color: var(--clr-primary);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color var(--transition), border-color var(--transition),
+    color var(--transition);
+  box-shadow: var(--shadow-sm);
+  font-style: normal;
+}
+
+.pag-btn:hover {
+  background-color: var(--clr-primary);
+  color: #fff;
+  border-color: var(--clr-primary);
+}
+
+/* Admin add button in list view */
+.list-add-btn {
+  padding: 10px 20px;
+  width: 100%;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--clr-primary);
+  background: var(--clr-surface);
+  border: 1.5px solid var(--clr-primary);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background-color var(--transition), color var(--transition);
+  font-family: inherit;
+}
+
+.list-add-btn:hover {
+  background-color: var(--clr-primary);
+  color: #fff;
+}
+
+/* Disease add form */
+.disease-add-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  margin-bottom: 24px;
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+.disease-add-row label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--clr-text-2);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.disease-add-row input[type="text"] {
+  height: 40px;
+  padding: 0 12px;
+  border: 1.5px solid var(--clr-border);
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  color: var(--clr-text);
+  background: var(--clr-surface);
+  font-family: inherit;
+  width: 240px;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.disease-add-row input[type="text"]:focus {
+  outline: none;
+  border-color: var(--clr-primary);
+  box-shadow: 0 0 0 3px rgba(21,101,168,0.12);
+}
+
+/* ============================================================
+   Medical record — view page
+   ============================================================ */
+.record-view-wrapper {
+  padding: 28px 32px;
+}
+
+.record-view-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid var(--clr-border);
+}
+
+.record-view-title {
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--clr-text);
+  font-variant: small-caps;
+  margin: 0;
+}
+
+.record-view-date {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--clr-text-2);
+  margin: 0;
+}
+
+.record-view-pdf-btn {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.record-view-pdf-btn img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+
+.record-meta-row {
+  display: flex;
+  gap: 0;
+  margin-bottom: 24px;
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.record-meta-field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+  padding: 16px 20px;
+  border-right: 1px solid var(--clr-border);
+}
+
+.record-meta-field:last-child {
+  border-right: none;
+}
+
+.record-meta-value {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--clr-text);
+}
+
+.record-meta-label {
+  font-size: 0.7rem;
+  color: var(--clr-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.record-cards-row {
+  display: flex;
+  gap: 16px;
+}
+
+.record-card {
+  flex: 1;
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-card);
+  min-width: 0;
+}
+
+.record-card h4 {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--clr-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 10px;
+}
+
+.record-card-scroll {
+  width: 100%;
+  min-height: 110px;
+  max-height: 150px;
+  border: 1.5px solid var(--clr-border);
+  background: var(--clr-bg);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  font-size: 0.875rem;
+  color: var(--clr-text);
+  resize: none;
+  overflow-y: auto;
+  font-family: inherit;
+  line-height: 1.6;
+  box-sizing: border-box;
+}
+
+ul.record-card-scroll {
+  list-style: none;
+  margin: 0;
+}
+
+ul.record-card-scroll li {
+  padding: 5px 0;
+  border-bottom: 1px solid var(--clr-border);
+}
+
+ul.record-card-scroll li:last-child {
+  border-bottom: none;
+}
+
+/* ============================================================
+   Edit profile pages
+   ============================================================ */
+.edit-wrapper {
+  padding: 40px;
+  max-width: 600px;
+}
+
+.edit-page-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--clr-text);
+  margin-bottom: 4px;
+}
+
+.edit-page-subtitle {
+  font-size: 0.9rem;
+  color: var(--clr-text-muted);
+  margin-bottom: 32px;
+}
+
+.edit-form-group {
+  margin-bottom: 20px;
+}
+
+.edit-form-group label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--clr-text-2);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+}
+
+.edit-form-group input[type="text"] {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid var(--clr-border);
+  border-radius: var(--radius);
+  font-size: 0.95rem;
+  color: var(--clr-text);
+  background: var(--clr-surface);
+  transition: border-color var(--transition), box-shadow var(--transition);
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.edit-form-group input[type="text"]:focus {
+  outline: none;
+  border-color: var(--clr-primary);
+  box-shadow: 0 0 0 3px rgba(21,101,168,0.12);
+}
+
+.edit-form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.btn-emrs-save {
+  padding: 10px 28px;
+  background-color: var(--clr-primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--transition);
+  font-family: inherit;
+}
+
+.btn-emrs-save:hover {
+  background-color: var(--clr-primary-dark);
+}
+
+.btn-emrs-cancel {
+  padding: 10px 28px;
+  background-color: transparent;
+  color: var(--clr-text-2);
+  border: 1.5px solid var(--clr-border);
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+  font-family: inherit;
+}
+
+.btn-emrs-cancel:hover {
+  background-color: var(--clr-bg);
+  border-color: var(--clr-text-muted);
+  color: var(--clr-text);
+}
+
+/* ============================================================
+   Patient / Admin registration forms
+   ============================================================ */
+.reg-page {
+  min-height: 100vh;
+  background: linear-gradient(150deg, #0d2137 0%, #1565a8 55%, #2e9ec7 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 16px;
+}
+
+.reg-card {
+  width: 100%;
+  max-width: 780px;
+  background: var(--clr-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+.reg-card-header {
+  background: var(--clr-bg);
+  border-bottom: 1px solid var(--clr-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.reg-card-header img {
+  height: 54px;
+  width: auto;
+}
+
+.reg-card-body {
+  padding: 32px 40px;
+}
+
+.reg-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--clr-text);
+  margin-bottom: 20px;
+}
+
+.reg-form-label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--clr-text-2);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 5px;
+  margin-top: 14px;
+}
+
+.reg-form-input {
+  width: 100%;
+  height: 42px;
+  padding: 0 14px;
+  border: 1.5px solid var(--clr-border);
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  color: var(--clr-text);
+  background: var(--clr-surface);
+  font-family: inherit;
+  transition: border-color var(--transition), box-shadow var(--transition);
+  box-sizing: border-box;
+}
+
+.reg-form-input:focus {
+  outline: none;
+  border-color: var(--clr-primary);
+  box-shadow: 0 0 0 3px rgba(21,101,168,0.12);
+}
+
+.reg-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+/* ============================================================
+   Add-record page (doctor)
+   ============================================================ */
+.add-record-wrapper {
+  padding: 28px 32px;
+}
+
+.add-record-header {
+  display: flex;
+  align-items: baseline;
+  gap: 24px;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid var(--clr-border);
+}
+
+.add-record-title {
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--clr-text);
+  font-variant: small-caps;
+  margin: 0;
+}
+
+.add-record-date {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--clr-text-2);
+  margin: 0;
+}
+
+.add-record-cards-row {
+  display: flex;
+  gap: 16px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.add-record-card {
+  flex: 1;
+  min-width: 160px;
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-card);
+}
+
+.add-record-card h4 {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--clr-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 10px;
+}
+
+.add-record-card textarea {
+  width: 100%;
+  min-height: 120px;
+  max-height: 150px;
+  border: 1.5px solid var(--clr-border);
+  background: var(--clr-bg);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  font-size: 0.875rem;
+  color: var(--clr-text);
+  resize: none;
+  font-family: inherit;
+  line-height: 1.6;
+  box-sizing: border-box;
+  transition: border-color var(--transition);
+}
+
+.add-record-card textarea:focus {
+  outline: none;
+  border-color: var(--clr-primary);
+}
+
+/* ============================================================
+   Viz chart
+   ============================================================ */
+.viz-wrapper {
+  padding: 32px 40px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.viz-chart-card {
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: 32px;
+  width: 100%;
+  max-width: 780px;
+}

@@ -1,0 +1,5 @@
+/* edit-profile.css — layout handled by .edit-* / .btn-emrs-* in index.css */
+::placeholder {
+  color: var(--clr-text-muted);
+  opacity: 0.7;
+}

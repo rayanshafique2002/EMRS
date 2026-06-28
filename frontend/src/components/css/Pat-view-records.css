@@ -1,0 +1,7 @@
+/* Pat-view-records.css — layout handled by .record-view-* in index.css */
+.LabelStyle {
+  font-size: 0.75rem;
+  color: var(--clr-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}

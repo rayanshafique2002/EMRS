@@ -1,0 +1,12 @@
+/* records-styles.css — shared by doctor add-records and view-record */
+.LabelStyle {
+  font-size: 0.75rem;
+  color: var(--clr-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* textarea border reset — layout handled via add-record-card in index.css */
+.txtarea {
+  border: none;
+}

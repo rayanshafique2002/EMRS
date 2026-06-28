@@ -1,0 +1,121 @@
+* {
+  box-sizing: border-box;
+}
+
+/* ===== Login page background ===== */
+.MainContainer {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 15px;
+  background: linear-gradient(150deg, #0d2137 0%, #1565a8 55%, #2e9ec7 100%);
+}
+
+/* ===== Auth card ===== */
+.CardStyle {
+  width: 100%;
+  max-width: 460px;
+  border-radius: 16px !important;
+  border: none !important;
+  box-shadow: 0 8px 32px rgba(13,33,55,0.22) !important;
+}
+
+/* ===== Card header (logo area) ===== */
+.HeaderStyle {
+  display: flex;
+  justify-content: center;
+  padding: 24px 24px 0;
+}
+
+/* ===== Logo ===== */
+.ImgStyle {
+  height: 52px;
+  width: auto;
+  margin-bottom: 0;
+}
+
+/* ===== Heading ===== */
+.HeadingStyle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1c2e3e;
+  margin-bottom: 4px;
+}
+
+/* ===== Form ===== */
+.FormStyle {
+  width: 100%;
+}
+
+.LocalForm {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.LocalForm input[type="email"],
+.LocalForm input[type="password"],
+.LocalForm input[type="text"] {
+  width: 100%;
+  height: 46px;
+  padding: 0 14px;
+  border: 1.5px solid #ccd9e3;
+  border-radius: 8px;
+  background: #f8fafc;
+  font-size: 0.95rem;
+  color: #1c2e3e;
+  font-family: inherit;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.LocalForm input[type="email"]:focus,
+.LocalForm input[type="password"]:focus,
+.LocalForm input[type="text"]:focus {
+  outline: none;
+  border-color: #1565a8;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(21,101,168,0.12);
+}
+
+/* ===== Buttons in LocalForm ===== */
+.LocalForm .btn-primary {
+  height: 46px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  background-color: #1565a8;
+  border-color: #1565a8;
+  transition: background-color 0.15s ease;
+}
+
+.LocalForm .btn-primary:hover {
+  background-color: #0d4275;
+  border-color: #0d4275;
+}
+
+.LocalForm .btn-success {
+  height: 46px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.LocalForm .btn-link {
+  font-size: 0.875rem;
+  color: #1565a8;
+  text-decoration: none;
+  padding: 0;
+}
+
+.LocalForm .btn-link:hover {
+  color: #0d4275;
+  text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+  .CardStyle {
+    border-radius: 12px !important;
+  }
+}

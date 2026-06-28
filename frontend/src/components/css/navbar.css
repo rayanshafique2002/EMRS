@@ -1,0 +1,77 @@
+/* Sidebar shell */
+.sidenav {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--clr-sidebar);
+}
+
+/* Logo area */
+.logostyle {
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255,255,255,0.06);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  flex-shrink: 0;
+  padding: 12px;
+}
+
+.logostyle img {
+  max-height: 44px;
+  max-width: 80%;
+  width: auto;
+  object-fit: contain;
+}
+
+/* Nav list */
+.sidenav ul {
+  list-style: none;
+  margin: 0;
+  padding: 16px 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Each nav link */
+.nav-link-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  text-decoration: none;
+  color: var(--clr-sidebar-text);
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-left: 3px solid transparent;
+  transition: color var(--transition), background-color var(--transition),
+    border-color var(--transition);
+  margin: 2px 0;
+}
+
+.nav-link-item:hover {
+  color: var(--clr-sidebar-hover);
+  background-color: rgba(255,255,255,0.07);
+  text-decoration: none;
+}
+
+.nav-link-item.active {
+  color: #fff;
+  background-color: rgba(58,159,214,0.18);
+  border-left-color: var(--clr-sidebar-active);
+}
+
+/* Material icon inside link */
+.nav-link-icon {
+  font-size: 1.25rem;
+  line-height: 1;
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
+.nav-link-item.active .nav-link-icon {
+  opacity: 1;
+}

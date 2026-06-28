@@ -1,0 +1,7 @@
+/* registration.css — layout handled by .reg-* classes in index.css */
+::placeholder {
+  color: var(--clr-text-muted);
+  opacity: 0.7;
+}
+
+/* ButtonStyle and ArrowStyle are no longer used in patient registration */
