@@ -187,55 +187,69 @@ initializeCredentialsTable();
 
 // Register a local user (email + password)
 exports.registerLocal = async function (req, res) {
-  const { email, password, username } = req.body;
-  console.log("Registering user:", email, username);
-  // username is optional but useful to store as patient first name
+  const { email, password, username, role } = req.body;
+  console.log("Registering user:", email, username, role);
+
   if (!email || !password) {
     res.status(400).json({ success: false, message: "Email and password required" });
     return;
   }
 
+  const normalizedRole = role === "doctor" ? "doctor" : "patient";
+
   try {
-    // check if login exists
-    console.log("Checking if login exists:", email);
-    
     let existing;
     try {
-      console.log(db);
-      existing = await Promise.race([
-        db.oneOrNone("select * from login where email=$1", [email]),
-        // new Promise((_, reject) => 
-          // setTimeout(() => reject(new Error("Database query timeout")), 10000)
-        // )
-      ]);
+      existing = await db.oneOrNone("select * from login where email=$1", [email]);
       console.log("Login query successful, existing:", existing ? "found" : "not found");
     } catch (dbErr) {
       console.error("Error checking login existence:", dbErr.message);
       res.status(500).json({ success: false, message: "Database error: " + dbErr.message });
       return;
     }
-    
+
     let loginId;
     if (existing) {
-      // if credentials already exist, reject
       const cred = await db.oneOrNone("select * from credentials where login_id=$1", [existing.id]);
       if (cred) {
         res.status(409).json({ success: false, message: "Account already exists" });
         return;
       }
+
       console.log("Existing login found:", existing.id);
       loginId = existing.id;
-      // ensure a patient row exists (store username as first name if provided)
-      const pat = await db.oneOrNone("select * from patient where email=$1", [email]);
-      if (!pat) {
-        await db.none("insert into patient (email,f_name) values ($1,$2)", [email, username || null]);
+      await db.none("update login set user_role=$1 where id=$2", [normalizedRole, loginId]);
+
+      if (normalizedRole === "patient") {
+        await db.none(
+          "insert into patient (email,f_name) values ($1,$2) on conflict (email) do nothing",
+          [email, username || null]
+        );
+      } else {
+        await db.none(
+          "insert into doctor (email,f_name) values ($1,$2) on conflict (email) do nothing",
+          [email, username || null]
+        );
       }
     } else {
       console.log("Creating new login for:", email);
-      const data = await db.one("insert into login (email,user_role) values ($1,'patient') returning id;", [email]);
+      const data = await db.one(
+        "insert into login (email,user_role) values ($1,$2) returning id;",
+        [email, normalizedRole]
+      );
       loginId = data.id;
-      // create patient row with username as first name
-      await db.none("insert into patient (email,f_name) values ($1,$2)", [email, username || null]);
+
+      if (normalizedRole === "patient") {
+        await db.none(
+          "insert into patient (email,f_name) values ($1,$2)",
+          [email, username || null]
+        );
+      } else {
+        await db.none(
+          "insert into doctor (email,f_name) values ($1,$2)",
+          [email, username || null]
+        );
+      }
     }
 
     const hash = await bcrypt.hash(password, 10);
