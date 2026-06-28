@@ -8,7 +8,17 @@ const NavBar = () => (
     <div className="logostyle">
       <img src={logo} alt="EMR" />
     </div>
+    <div className="sidenav-header">
+      <p className="sidenav-kicker">Healthcare Portal</p>
+      <h3 className="sidenav-title">Doctor Menu</h3>
+    </div>
     <ul>
+      <li>
+        <NavLink className="nav-link-item" to="/d/dashboard">
+          <i className="material-icons nav-link-icon">dashboard</i>
+          Dashboard
+        </NavLink>
+      </li>
       <li>
         <NavLink className="nav-link-item" to="/d/profile">
           <i className="material-icons nav-link-icon">account_box</i>

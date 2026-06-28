@@ -9,20 +9,30 @@ class Edit extends Component {
     this.state = {
       fname: "",
       lname: "",
+      cnic: "",
+      dob: "",
+      gender: "male",
+      blood: "A+",
       num: "",
+      email: "",
+      redirect: false,
     };
   }
 
   componentDidMount() {
-    if (this.props.location.state) {
-      const { f_name, l_name, contact } = this.props.location.state;
+    axios.get("/patient/profile").then((res) => {
+      const data = (res.data && res.data.data) || {};
       this.setState({
-        fname: f_name,
-        lname: l_name,
-        num: contact,
-        redirect: false,
+        fname: data.f_name || "",
+        lname: data.l_name || "",
+        cnic: data.cnic || "",
+        dob: data.dob || "",
+        gender: data.gender || "male",
+        blood: data.blood || "A+",
+        num: data.phone_num || "",
+        email: data.email || "",
       });
-    }
+    });
   }
 
   ChangeHandle = (e) => {
@@ -31,14 +41,18 @@ class Edit extends Component {
 
   SubmissionHandle = (e) => {
     e.preventDefault();
-    const { fname, lname, num } = this.state;
+    const { fname, lname, num, cnic, dob, gender, blood } = this.state;
     axios
       .post("/patient/profile", {
         fname: fname,
         lname: lname,
         num: num,
+        cnic: cnic,
+        dob: dob,
+        gender: gender,
+        bloodGroup: blood,
       })
-      .then((res) => {
+      .then(() => {
         this.setState({ redirect: true });
       });
   };
@@ -51,23 +65,9 @@ class Edit extends Component {
     return (
       <div className="edit-wrapper">
         <h1 className="edit-page-title">Edit Profile</h1>
-        <p className="edit-page-subtitle">Update your contact and name details.</p>
+        <p className="edit-page-subtitle">Update your personal and contact details.</p>
 
         <form onSubmit={this.SubmissionHandle}>
-          <div className="edit-form-group">
-            <label htmlFor="num">Contact No.</label>
-            <input
-              type="text"
-              name="num"
-              id="num"
-              pattern="[0-9]{11}"
-              title="Can only consist of eleven integers"
-              value={this.state.num}
-              placeholder="Your contact number here"
-              onChange={this.ChangeHandle}
-            />
-          </div>
-
           <div className="edit-form-group">
             <label htmlFor="fname">First Name</label>
             <input
@@ -96,11 +96,95 @@ class Edit extends Component {
             />
           </div>
 
+          <div className="edit-form-group">
+            <label htmlFor="cnic">CNIC</label>
+            <input
+              type="text"
+              name="cnic"
+              id="cnic"
+              pattern="[0-9]{13}"
+              title="Can only consist of thirteen integers"
+              value={this.state.cnic}
+              placeholder="13-digit CNIC number"
+              onChange={this.ChangeHandle}
+            />
+          </div>
+
+          <div className="edit-form-group">
+            <label htmlFor="dob">Date of Birth</label>
+            <input
+              type="date"
+              name="dob"
+              id="dob"
+              value={this.state.dob}
+              onChange={this.ChangeHandle}
+            />
+          </div>
+
+          <div className="edit-form-group">
+            <label htmlFor="gender">Gender</label>
+            <select
+              name="gender"
+              id="gender"
+              value={this.state.gender}
+              onChange={this.ChangeHandle}
+            >
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div className="edit-form-group">
+            <label htmlFor="blood">Blood Group</label>
+            <select
+              name="blood"
+              id="blood"
+              value={this.state.blood}
+              onChange={this.ChangeHandle}
+            >
+              <option value="A+">A+</option>
+              <option value="A-">A-</option>
+              <option value="B+">B+</option>
+              <option value="B-">B-</option>
+              <option value="AB+">AB+</option>
+              <option value="AB-">AB-</option>
+              <option value="O+">O+</option>
+              <option value="O-">O-</option>
+            </select>
+          </div>
+
+          <div className="edit-form-group">
+            <label htmlFor="num">Contact No.</label>
+            <input
+              type="text"
+              name="num"
+              id="num"
+              pattern="[0-9]{11}"
+              title="Can only consist of eleven integers"
+              value={this.state.num}
+              placeholder="Your contact number here"
+              onChange={this.ChangeHandle}
+            />
+          </div>
+
+          <div className="edit-form-group">
+            <label htmlFor="email">Email</label>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              value={this.state.email}
+              readOnly
+              disabled
+              title="Email is your login and cannot be changed here"
+            />
+          </div>
+
           <div className="edit-form-actions">
             <input
               type="submit"
               value="Save Changes"
-              onSubmit={this.SubmissionHandle}
               className="btn-emrs-save"
             />
             <NavLink to="/p/profile">

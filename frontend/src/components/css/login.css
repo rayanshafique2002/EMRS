@@ -17,9 +17,15 @@
 .CardStyle {
   width: 100%;
   max-width: 460px;
-  border-radius: 16px !important;
+  border-radius: 20px !important;
   border: none !important;
-  box-shadow: 0 8px 32px rgba(13,33,55,0.22) !important;
+  box-shadow: 0 16px 48px rgba(13,33,55,0.22) !important;
+  overflow: hidden;
+  background: #ffffff !important;
+}
+
+.CardStyle .card-body {
+  padding: 28px 28px 24px;
 }
 
 /* ===== Card header (logo area) ===== */
@@ -62,13 +68,18 @@
   width: 100%;
   height: 46px;
   padding: 0 14px;
-  border: 1.5px solid #ccd9e3;
-  border-radius: 8px;
-  background: #f8fafc;
+  border: 1.5px solid #b7c9d8;
+  border-radius: 10px;
+  background: #ffffff;
   font-size: 0.95rem;
-  color: #1c2e3e;
+  color: #0f2133;
   font-family: inherit;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.LocalForm input::placeholder {
+  color: #526f82;
+  opacity: 1;
 }
 
 .LocalForm input[type="email"]:focus,
@@ -79,36 +90,49 @@
   border-color: #1565a8;
   background: #fff;
   box-shadow: 0 0 0 3px rgba(21,101,168,0.12);
+  transform: translateY(-1px);
 }
 
 /* ===== Buttons in LocalForm ===== */
 .LocalForm .btn-primary {
   height: 46px;
-  border-radius: 8px;
+  border-radius: 10px;
   font-size: 0.95rem;
   font-weight: 600;
-  background-color: #1565a8;
-  border-color: #1565a8;
-  transition: background-color 0.15s ease;
+  background: linear-gradient(135deg, #1565a8 0%, #2e9ec7 100%);
+  border: none;
+  color: #ffffff;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 8px 18px rgba(21,101,168,0.16);
 }
 
 .LocalForm .btn-primary:hover {
-  background-color: #0d4275;
-  border-color: #0d4275;
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(21,101,168,0.2);
+}
+
+.LocalForm .btn-primary:active,
+.LocalForm .btn-success:active {
+  transform: scale(0.98);
 }
 
 .LocalForm .btn-success {
   height: 46px;
-  border-radius: 8px;
+  border-radius: 10px;
   font-size: 0.95rem;
   font-weight: 600;
+  background: linear-gradient(135deg, #1a7a45 0%, #2e9ec7 100%);
+  border: none;
+  color: #ffffff;
+  box-shadow: 0 8px 18px rgba(26,122,69,0.16);
 }
 
 .LocalForm .btn-link {
   font-size: 0.875rem;
-  color: #1565a8;
+  color: #0d5d9b;
   text-decoration: none;
   padding: 0;
+  font-weight: 700;
 }
 
 .LocalForm .btn-link:hover {

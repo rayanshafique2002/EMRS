@@ -41,7 +41,25 @@ class DocProfile extends Component {
 
     return (
       <div className="profile-wrapper">
-        <h1 className="profile-name">{fname + " " + lname}</h1>
+        <div className="profile-header">
+          <h1 className="profile-name">{fname + " " + lname}</h1>
+          <NavLink
+            className="profile-edit-button"
+            to={{
+              pathname: "edit-profile",
+              state: {
+                fname: this.state.fname,
+                lname: this.state.lname,
+                contact: this.state.num,
+                cnic: this.state.cnic,
+                email: this.state.email,
+              },
+            }}
+          >
+            <i className="material-icons" aria-hidden="true">edit</i>
+            Edit
+          </NavLink>
+        </div>
 
         <div className="profile-grid">
           <div className="profile-field">
@@ -58,26 +76,6 @@ class DocProfile extends Component {
           </div>
         </div>
 
-        <NavLink
-          to={{
-            pathname: "edit-profile",
-            state: {
-              fname: this.state.fname,
-              lname: this.state.lname,
-              contact: this.state.num,
-              cnic: this.state.cnic,
-              email: this.state.email,
-            },
-          }}
-        >
-          <button
-            type="button"
-            className="btn btn-outline-primary"
-            style={{ padding: "8px 24px", fontSize: "0.9rem" }}
-          >
-            Edit Profile
-          </button>
-        </NavLink>
       </div>
     );
   }

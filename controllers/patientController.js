@@ -25,8 +25,10 @@ exports.addTableId = function (req, res, next) {
           tid: data.id,
           email: req.user.email,
         };
+        next();
+      } else {
+        res.status(403).json({ status: "error", message: "Patient profile not found" });
       }
-      next();
     })
     .catch((err) => {
       console.log(err);
@@ -79,10 +81,10 @@ exports.getProfile = function (req, res) {
 // Updates patient's profile information with the provided information.
 exports.updateProfile = function (req, res) {
   const id = req.user.tid;
-  const { fname, lname, num } = req.body;
+  const { fname, lname, num, cnic, dob, gender, bloodGroup } = req.body;
   db.none(
-    "update patient set f_name=$1,l_name=$2,phone_num=$3 where id = $4;",
-    [fname, lname, num, id]
+    "update patient set f_name=$1,l_name=$2,phone_num=$3,cnic=$4,dob=$5,gender=$6,blood=$7 where id = $8;",
+    [fname, lname, num, cnic, dob || null, gender, bloodGroup, id]
   )
     .then(() => {
       res.json({
@@ -91,6 +93,7 @@ exports.updateProfile = function (req, res) {
     })
     .catch((err) => {
       console.log(err);
+      res.status(500).json({ status: "error", message: "Failed to update profile" });
     });
 };
 
@@ -155,4 +158,39 @@ exports.singleRecord = function (req, res) {
     .catch((err) => {
       console.log(err);
     });
+};
+
+exports.getDashboard = async function (req, res) {
+  const id = req.user.tid;
+
+  try {
+    const data = await db.task(async (t) => {
+      const totals = await t.one(
+        `select
+          (select count(*) from record where pat_id = $1) as records,
+          (select count(distinct doc_id) from record where pat_id = $1) as doctors,
+          (select count(*) from record_to_disease rtd
+            join record r on r.id = rtd.record_id
+            where r.pat_id = $1) as diagnoses`,
+        [id]
+      );
+      const recentRecords = await t.any(
+        `select record.id, record.date, doctor.f_name as doc_fname, doctor.l_name as doc_lname,
+          record.prescription
+         from record
+         join doctor on doctor.id = record.doc_id
+         where record.pat_id = $1
+         order by record.date desc, record.id desc
+         limit 5`,
+        [id]
+      );
+
+      return { totals, recentRecords };
+    });
+
+    res.json({ status: "ok", data });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ status: "error", message: "Failed to load dashboard" });
+  }
 };
