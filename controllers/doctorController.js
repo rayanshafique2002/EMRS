@@ -2,27 +2,66 @@ const db = require("../db/dbConnector");
 
 //Adds the table id from the patient table into request
 exports.addTableId = function (req, res, next) {
-  const { id, role } = req.user;
-  let tid = -1;
-  if (role === "doctor") {
-    db.oneOrNone(
-      "select doctor.id from doctor,login where login.id=$1 and login.email = doctor.email;",
-      [id]
-    ).then((data) => {
-      if (data) {
-        tid = data.id;
+  if (!req.user) {
+    res.status(401).json({ status: "error", message: "Not authenticated" });
+    return;
+  }
 
-        const user_data = {
+  const { id, role } = req.user;
+  db.oneOrNone(
+    "select doctor.id, doctor.email from doctor,login where login.id=$1 and login.email = doctor.email;",
+    [id]
+  )
+    .then((data) => {
+      if (data) {
+        req.user = {
           id: id,
           role: "doctor",
-          tid: tid,
+          tid: data.id,
+          email: data.email,
         };
-        req.user = user_data;
         next();
       } else {
-        next();
+        res.status(403).json({ status: "error", message: "Doctor profile not found" });
       }
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({ status: "error", message: "Server error" });
     });
+};
+
+exports.getDashboard = async function (req, res) {
+  const id = req.user.tid;
+
+  try {
+    const data = await db.task(async (t) => {
+      const totals = await t.one(
+        `select
+          (select count(*) from record where doc_id = $1) as records,
+          (select count(distinct pat_id) from record where doc_id = $1) as patients,
+          (select count(*) from record_to_disease rtd
+            join record r on r.id = rtd.record_id
+            where r.doc_id = $1 and rtd.date > now() - '1 month'::interval) as recent_diagnoses`,
+        [id]
+      );
+      const upcomingWork = await t.any(
+        `select record.id, record.date, patient.f_name as pat_fname, patient.l_name as pat_lname
+         from record
+         join patient on patient.id = record.pat_id
+         where record.doc_id = $1
+         order by record.date desc, record.id desc
+         limit 5`,
+        [id]
+      );
+
+      return { totals, upcomingWork };
+    });
+
+    res.json({ status: "ok", data });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ status: "error", message: "Failed to load dashboard" });
   }
 };
 
@@ -44,16 +83,17 @@ exports.getProfile = function (req, res) {
     });
 };
 
-//Updates the doctor's information with the provided variables in body
+//Updates the doctor's information with the provided variables in body.
+//Email is the login identity key and is managed by admins, so it is not
+//editable here to avoid desyncing the login and doctor tables.
 exports.editProfile = function (req, res) {
   const id = req.user.tid;
-  const { fname, lname, num, cnic, email } = req.body;
-  db.none("update doctor set f_name=$1,l_name=$2,phone_num=$3,cnic=$4,email=$5 where id = $6;", [
+  const { fname, lname, num, cnic } = req.body;
+  db.none("update doctor set f_name=$1,l_name=$2,phone_num=$3,cnic=$4 where id = $5;", [
     fname,
     lname,
     num,
     cnic,
-    email,
     id,
   ])
     .then(() => {
@@ -63,6 +103,7 @@ exports.editProfile = function (req, res) {
     })
     .catch((err) => {
       console.log(err);
+      res.status(500).json({ status: "error", message: "Failed to update profile" });
     });
 };
 
@@ -249,7 +290,7 @@ exports.createRecord = function (req, res) {
     });
 };
 
-//Returns the disease statistics (count) of the past week
+//Returns the disease statistics (count) of the past month
 exports.getDiseaseStats = function (req, res) {
   db.any(
     "select disease, count(disease) from record_to_disease where date > now() - '1 month'::interval group by disease order by count DESC limit 5;"
@@ -281,12 +322,4 @@ exports.setDiseaseStat = function (req, res) {
     .catch((err) => {
       console.log(err);
     });
-};
-
-exports.getTimings = function (req, res) {
-  res.send("timings");
-};
-
-exports.setVisual = function (req, res) {
-  res.send("edit timings");
 };

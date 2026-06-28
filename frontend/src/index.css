@@ -19,9 +19,9 @@
   --clr-bg:      #f0f4f8;
 
   /* Text */
-  --clr-text:       #1c2e3e;
-  --clr-text-2:     #4a6275;
-  --clr-text-muted: #7a97a8;
+  --clr-text:       #102033;
+  --clr-text-2:     #304a5f;
+  --clr-text-muted: #526f82;
 
   /* Borders / status */
   --clr-border:  #ccd9e3;
@@ -42,6 +42,43 @@
   --transition: 150ms ease;
 }
 
+@media (prefers-color-scheme: dark) {
+  :root {
+    --clr-primary:       #4fb0dd;
+    --clr-primary-dark:  #87cff0;
+    --clr-primary-light: #14334a;
+    --clr-accent:        #7bc7a4;
+
+    --clr-sidebar:       #081723;
+    --clr-sidebar-text:  #a6c6d8;
+    --clr-sidebar-hover: #ffffff;
+    --clr-sidebar-active:#65c3ee;
+
+    --clr-surface: #111d29;
+    --clr-bg:      #0b141d;
+
+    --clr-text:       #edf6fb;
+    --clr-text-2:     #bfd4df;
+    --clr-text-muted: #8fb0c1;
+
+    --clr-border:  #294252;
+    --clr-error:   #ff9b8e;
+    --clr-success: #88d8aa;
+
+    --shadow-sm:   0 1px 3px rgba(0,0,0,0.28);
+    --shadow-md:   0 4px 12px rgba(0,0,0,0.30);
+    --shadow-card: 0 2px 10px rgba(0,0,0,0.32);
+    --shadow-lg:   0 8px 24px rgba(0,0,0,0.36);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .profile-grid,
+  .edit-wrapper {
+    background: var(--clr-surface);
+  }
+}
+
 /* ============================================================
    Base
    ============================================================ */
@@ -52,7 +89,22 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: var(--clr-text);
-  background-color: var(--clr-bg);
+  background:
+    radial-gradient(circle at top left, rgba(46,158,199,0.12), transparent 22%),
+    linear-gradient(135deg, #f5f8fc 0%, #eef4f9 100%);
+  min-height: 100vh;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background:
+      radial-gradient(circle at top left, rgba(123,199,164,0.12), transparent 24%),
+      linear-gradient(135deg, #0b141d 0%, #111d29 100%);
+  }
+}
+
+* {
+  transition: background-color var(--transition), border-color var(--transition), transform var(--transition), box-shadow var(--transition);
 }
 
 code {
@@ -102,11 +154,19 @@ code {
   padding: 36px 40px;
 }
 
+.profile-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
 .profile-name {
   font-size: 1.9rem;
   font-weight: 700;
   color: var(--clr-text);
-  margin-bottom: 28px;
+  margin: 0;
 }
 
 .profile-grid {
@@ -118,6 +178,12 @@ code {
   box-shadow: var(--shadow-card);
   overflow: hidden;
   margin-bottom: 32px;
+  animation: fadeUp 280ms ease-out;
+}
+
+.profile-field:hover {
+  background: rgba(21,101,168,0.03);
+  transform: translateY(-1px);
 }
 
 .profile-field {
@@ -132,8 +198,8 @@ code {
 
 .profile-field-label {
   font-size: 0.7rem;
-  font-weight: 600;
-  color: var(--clr-text-muted);
+  font-weight: 800;
+  color: var(--clr-text-2);
   text-transform: uppercase;
   letter-spacing: 0.07em;
   margin-bottom: 5px;
@@ -141,8 +207,40 @@ code {
 
 .profile-field-value {
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 700;
   color: var(--clr-text);
+  word-break: break-word;
+}
+
+.profile-edit-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 0 18px;
+  border-radius: var(--radius);
+  border: 1.5px solid var(--clr-primary);
+  background: var(--clr-primary);
+  color: #ffffff;
+  font-size: 0.9rem;
+  font-weight: 800;
+  text-decoration: none;
+  box-shadow: var(--shadow-sm);
+  white-space: nowrap;
+}
+
+.profile-edit-button:hover {
+  background: var(--clr-primary-dark);
+  border-color: var(--clr-primary-dark);
+  color: #ffffff;
+  text-decoration: none;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.profile-edit-button .material-icons {
+  font-size: 1.05rem;
 }
 
 /* ============================================================
@@ -171,6 +269,12 @@ code {
   border: none !important;
 }
 
+.list-container .table tbody,
+.list-container .table tbody tr,
+.list-container .table tbody td {
+  background-color: var(--clr-surface);
+}
+
 .list-container .table tbody td {
   padding: 12px 16px;
   vertical-align: middle;
@@ -180,6 +284,10 @@ code {
 }
 
 .list-container .table tbody tr:hover {
+  transform: translateX(2px);
+}
+
+.list-container .table tbody tr:hover td {
   background-color: var(--clr-primary-light);
 }
 
@@ -431,7 +539,12 @@ ul.record-card-scroll li:last-child {
    ============================================================ */
 .edit-wrapper {
   padding: 40px;
-  max-width: 600px;
+  max-width: 640px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fbff 100%);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  margin: 24px 0 0 24px;
 }
 
 .edit-page-title {
@@ -461,7 +574,8 @@ ul.record-card-scroll li:last-child {
   margin-bottom: 6px;
 }
 
-.edit-form-group input[type="text"] {
+.edit-form-group input[type="text"],
+.edit-form-group input[type="email"] {
   width: 100%;
   padding: 10px 14px;
   border: 1.5px solid var(--clr-border);
@@ -474,7 +588,8 @@ ul.record-card-scroll li:last-child {
   box-sizing: border-box;
 }
 
-.edit-form-group input[type="text"]:focus {
+.edit-form-group input[type="text"]:focus,
+.edit-form-group input[type="email"]:focus {
   outline: none;
   border-color: var(--clr-primary);
   box-shadow: 0 0 0 3px rgba(21,101,168,0.12);
@@ -501,6 +616,13 @@ ul.record-card-scroll li:last-child {
 
 .btn-emrs-save:hover {
   background-color: var(--clr-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(21,101,168,0.18);
+}
+
+.btn-emrs-cancel:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(13,33,55,0.08);
 }
 
 .btn-emrs-cancel {
@@ -605,6 +727,17 @@ ul.record-card-scroll li:last-child {
   margin-top: 24px;
 }
 
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* ============================================================
    Add-record page (doctor)
    ============================================================ */
@@ -702,4 +835,28 @@ ul.record-card-scroll li:last-child {
   padding: 32px;
   width: 100%;
   max-width: 780px;
+}
+
+@media (max-width: 640px) {
+  .profile-wrapper {
+    padding: 24px 16px;
+  }
+
+  .profile-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .profile-edit-button {
+    width: 100%;
+  }
+
+  .profile-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-field,
+  .profile-field:nth-child(3n) {
+    border-right: none;
+  }
 }

@@ -1,45 +1,90 @@
-# Electronic Medical Records System (EMRS)
+# Emergency Medical Record System (EMRS)
 
-A record management system built for medical clinics to store and record relevant data that is daily generated.
+EMRS is a Node.js, Express, PostgreSQL, and React healthcare record system for admins, doctors, and patients. This modernization pass hardens authentication, adds role-scoped dashboards, improves responsive UI foundations, and documents the production path for appointments, emergency cases, notifications, files, and audit logging.
 
----
+## Stack
 
-## Deployed using Heroku: [e-m-r-s.herokuapp.com](https://e-m-r-s.herokuapp.com/)
+- Backend: Node.js, Express, Passport session auth, pg-promise
+- Frontend: React 16, React Router, Axios
+- Database: PostgreSQL
+- Security: Helmet, restricted CORS, httpOnly cookie sessions, bcrypt password hashing, server-side RBAC middleware
 
----
+## Setup
 
-## Libraries / Tools Used
+1. Install backend dependencies:
+   ```bash
+   npm install
+   ```
 
-- React JS (Frontend)
-- Node JS (Backend)
-- Express JS (Backend)
-- PostgreSQL (Database)
+2. Install frontend dependencies:
+   ```bash
+   cd frontend
+   npm install
+   ```
 
----
+3. Create a PostgreSQL database and run:
+   ```bash
+   psql -d your_database -f setup_database.sql
+   ```
 
-## How it works
+4. Configure `.env` in the project root:
+   ```env
+   DB_HOST=localhost
+   DB_PORT=5432
+   DB_DATABASE=emrs
+   DB_USER=postgres
+   DB_PASS=your_password
+   KEY=replace-with-a-long-random-session-secret
+   CLIENT_ORIGIN=http://localhost:3000
+   CORS_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
+   NODE_ENV=development
+   ```
 
-The basic setup of the EMRS system for a specific clinic is as follows:
+5. Start the backend:
+   ```bash
+   npm start
+   ```
 
-1. The team manually setups admin accounts for the clinic.
-2. The admin account can add doctor accounts and also remove doctor accounts.
-3. New patients are automatically redirected to the registration page when they login for the first time on the EMRS website.
+6. Start the frontend:
+   ```bash
+   cd frontend
+   npm start
+   ```
 
-## Features and functionalities
+## Current Roles
 
-### Admin
+- Admin: manages doctor accounts and diseases, views the admin dashboard.
+- Doctor: views profile, records, patient list, record creation, visualizations, and doctor dashboard.
+- Patient: manages profile, views records, downloads PDFs, and views patient dashboard.
 
-1. An admin account has the authority to add or remove doctor accounts.
-2. An admin account can also add new diseases to the existing disease list at the clinic.
+## Modernization Completed
 
-### Doctor
+- Added explicit backend RBAC middleware for `/admin`, `/doctor`, and `/patient` APIs.
+- Restricted CORS to configured frontend origins instead of allowing every origin.
+- Hardened session cookies with `httpOnly`, `sameSite`, and production-only `secure`.
+- Added request body size limits.
+- Improved local auth validation, email normalization, stronger bcrypt hashing, login throttling, and safer error responses.
+- Added dashboard APIs for admins, doctors, and patients using existing records data.
+- Added responsive role dashboards with loading skeletons and recent activity.
+- Added dark-mode design tokens through `prefers-color-scheme`.
+- Updated schema foundations for credentials, appointments, emergency cases, departments, notifications, medical files, and audit logs.
 
-1. A doctor account is redirected to their profile page on login where they can view their basic information such as CNIC, Contact Number, and email. They may also edit this information if required.
-2. A records tab shows all of the patient records that the doctor has managed. They can select a particular record to view the record details including the patient details, observation, prescription, private notes, and diseases. Additionally, they may click on the pdf button to open up the record in a pdf view and download it as a pdf.
-3. The add record tab allows the doctor to create new patient records. They are given a list of existing patients registered within the system and they can select a specific patient to create their record.
-4. The visualizations tab provides the doctor a bar chart which has the number of cases on the y-axis and the disease name on the x-axis. This chart shows the 5 most frequent disease cases from the past week.
+## Production Backlog
 
-### Patient
+The database now has tables for the larger healthcare modules, but several workflows still need full UI and API implementation before real-world deployment:
 
-1. The patient account is redirected to their profile page on login where they can view and edit their basic information.
-2. A record tab shows the patient their existing records within the system. They can select a particular record to view its details and can also download a pdf of the record.
+- Forgot password, reset password, email verification, and email delivery.
+- Appointment calendar, reminders, queue management, and video consultation status.
+- Emergency intake, triage workflow, timeline, and doctor assignment screens.
+- Secure file upload storage with virus scanning and signed downloads.
+- Audit logging on every sensitive create, update, delete, and read operation.
+- API pagination and filters on every list endpoint.
+- Unit, integration, and API tests for auth, records, dashboards, and RBAC.
+
+## Security Notes
+
+- Use a long random `KEY` in every environment.
+- Set `NODE_ENV=production` behind HTTPS so secure cookies are enabled.
+- Keep `CLIENT_ORIGIN` exact for redirects, for example `https://emrs.example.com`.
+- Set `CORS_ORIGINS` to every allowed browser origin, separated by commas.
+- Do not expose doctor or admin creation publicly in production; provision privileged users through admin-only flows.

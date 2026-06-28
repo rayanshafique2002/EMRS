@@ -63,7 +63,7 @@ class Viz extends Component {
             options={{
               title: {
                 display: true,
-                text: "Top 5 Disease Cases — Past Week",
+                text: "Top 5 Disease Cases — Past 30 Days",
                 fontSize: 16,
               },
               legend: {
