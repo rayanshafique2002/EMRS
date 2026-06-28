@@ -2,10 +2,17 @@
 const express = require("express");
 const router = express.Router();
 const doctorController = require("../controllers/doctorController");
+const { requireDoctor } = require("../middleware/auth");
+
+router.use(requireDoctor);
 
 //Add table id from doctor table to req.
 router.use((req, res, next) => {
   doctorController.addTableId(req, res, next);
+});
+
+router.get("/dashboard", (req, res) => {
+  doctorController.getDashboard(req, res);
 });
 
 // Profile page route
@@ -56,16 +63,6 @@ router.get("/visualization", (req, res) => {
 // Visualization date set route
 router.post("/visualization", (req, res) => {
   doctorController.setDiseaseStat(req, res);
-});
-
-// Office hours route
-router.get("/timings/:id", (req, res) => {
-  doctorController.getTimings(req, res);
-});
-
-// Office hours add remove route
-router.post("/timings", (req, res) => {
-  doctorController.editTimings(req, res);
 });
 
 module.exports = router;

@@ -2,10 +2,17 @@
 const express = require("express");
 const router = express.Router();
 const patientController = require("../controllers/patientController");
+const { requirePatient } = require("../middleware/auth");
+
+router.use(requirePatient);
 
 //Add table id from patient table to req.
 router.use((req, res, next) => {
   patientController.addTableId(req, res, next);
+});
+
+router.get("/dashboard", (req, res) => {
+  patientController.getDashboard(req, res);
 });
 
 // New account route

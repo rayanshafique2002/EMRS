@@ -25,7 +25,7 @@ class Login extends React.Component {
     e.preventDefault();
     const { email, password } = this.state;
     try {
-      const res = await fetch("http://localhost:5000/auth/local/login", {
+      const res = await fetch("/auth/local/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -34,9 +34,9 @@ class Login extends React.Component {
       const data = await res.json();
       if (data.success) {
         // redirect based on role if provided
-        if (data.role === "patient") window.location.href = "/p/profile";
-        else if (data.role === "doctor") window.location.href = "/d/profile";
-        else if (data.role === "admin") window.location.href = "/a/doc-accounts";
+        if (data.role === "patient") window.location.href = "/p/dashboard";
+        else if (data.role === "doctor") window.location.href = "/d/dashboard";
+        else if (data.role === "admin") window.location.href = "/a/dashboard";
         else window.location.href = "/";
       } else {
         this.setState({ message: data.message || "Login failed" });
@@ -50,7 +50,7 @@ class Login extends React.Component {
     e.preventDefault();
     const { regEmail, regPassword, regUsername, regRole } = this.state;
     try {
-      const res = await fetch("http://localhost:5000/auth/local/register", {
+      const res = await fetch("/auth/local/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -64,7 +64,7 @@ class Login extends React.Component {
       const data = await res.json();
       if (data.success) {
         if (regRole === "doctor") {
-          window.location.href = "/d/profile";
+          window.location.href = "/d/dashboard";
         } else {
           window.location.href = "/newprofile";
         }

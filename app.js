@@ -12,6 +12,42 @@ var cors = require("cors");
 require("dotenv").config();
 
 var app = express();
+var isProduction = process.env.NODE_ENV === "production";
+var defaultOrigins = [
+  "http://localhost:3000",
+  "http://127.0.0.1:3000",
+  "http://localhost:3001",
+  "http://127.0.0.1:3001",
+];
+var configuredOrigins = (process.env.CORS_ORIGINS || process.env.CLIENT_ORIGIN || "")
+  .split(",")
+  .map(function (origin) {
+    return normalizeOrigin(origin);
+  })
+  .filter(Boolean);
+var allowedOrigins = Array.from(new Set(defaultOrigins.map(normalizeOrigin).concat(configuredOrigins)));
+
+function normalizeOrigin(origin) {
+  return String(origin || "").trim().replace(/\/+$/, "");
+}
+
+function isAllowedOrigin(origin) {
+  var normalizedOrigin = normalizeOrigin(origin);
+
+  if (!normalizedOrigin) {
+    return true;
+  }
+
+  if (allowedOrigins.indexOf(normalizedOrigin) !== -1) {
+    return true;
+  }
+
+  if (!isProduction && /^https?:\/\/(localhost|127\.0\.0\.1):\d+$/.test(normalizedOrigin)) {
+    return true;
+  }
+
+  return false;
+}
 
 //For defense against well known web vulnerabilities
 app.use(helmet());
@@ -19,26 +55,33 @@ app.use(helmet());
 //For compression
 app.use(compression());
 
-//Configure CORS - Allow requests from port 3000 or any origin
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      // Allow requests from localhost:3000 or any origin
-      if (!origin || origin === "http://localhost:3000" || origin === "http://127.0.0.1:3000") {
-        callback(null, true);
-      } else {
-        callback(null, true); // Allow all origins (change to callback(new Error(...)) to restrict)
-      }
-    },
-    credentials: true, // Allow cookies to be sent with requests
-  })
-);
+//Configure CORS for frontend origins that own authenticated sessions.
+var corsOptions = {
+  origin: function (origin, callback) {
+    if (isAllowedOrigin(origin)) {
+      callback(null, true);
+      return;
+    }
+
+    callback(new Error("Origin not allowed by CORS: " + origin));
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+  optionsSuccessStatus: 204,
+};
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 //Add cookie sessions of 1 hour
 app.use(
   cookieSession({
     maxAge: 1 * 1000 * 60 * 60,
-    keys: [process.env.KEY],
+    keys: [process.env.KEY || "development-session-key-change-me"],
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
   })
 );
 
@@ -53,8 +96,8 @@ var adminRouter = require("./routes/admin");
 var authRouter = require("./routes/auth");
 
 app.use(logger("dev"));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.json({ limit: "1mb" }));
+app.use(express.urlencoded({ extended: false, limit: "1mb" }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -74,11 +117,10 @@ app.use(function (err, req, res, next) {
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.status(500).json({
+  var status = err.status || 500;
+  res.status(status).json({
     message: err.message,
-    error: err,
+    error: req.app.get("env") === "development" ? err : {},
   });
 });
 

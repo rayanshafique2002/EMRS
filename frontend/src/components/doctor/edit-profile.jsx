@@ -17,28 +17,14 @@ class DocEdit extends Component {
   }
 
   componentDidMount() {
-    if (this.props.location.state) {
-      const { fname, lname, contact, cnic, email } = this.props.location.state;
-      this.setState({
-        fname: fname || "",
-        lname: lname || "",
-        num: contact || "",
-        cnic: cnic || "",
-        email: email || "",
-        redirect: false,
-      });
-      return;
-    }
-
-    axios.get("/doctor/profile/").then((res) => {
-      const data = res.data.data || {};
+    axios.get("/doctor/profile").then((res) => {
+      const data = (res.data && res.data.data) || {};
       this.setState({
         fname: data.f_name || "",
         lname: data.l_name || "",
         num: data.phone_num || "",
         cnic: data.cnic || "",
         email: data.email || "",
-        redirect: false,
       });
     });
   }
@@ -49,16 +35,15 @@ class DocEdit extends Component {
 
   SubmissionHandle = (e) => {
     e.preventDefault();
-    const { fname, lname, num, cnic, email } = this.state;
+    const { fname, lname, num, cnic } = this.state;
     axios
       .post("/doctor/profile", {
         fname: fname,
         lname: lname,
         num: num,
         cnic: cnic,
-        email: email,
       })
-      .then((res) => {
+      .then(() => {
         this.setState({ redirect: true });
       });
   };
@@ -101,6 +86,19 @@ class DocEdit extends Component {
           </div>
 
           <div className="edit-form-group">
+            <label htmlFor="cnic">CNIC</label>
+            <input
+              type="text"
+              id="cnic"
+              pattern="[0-9]{13}"
+              title="Can only consist of thirteen integers"
+              value={this.state.cnic}
+              placeholder="13-digit CNIC number"
+              onChange={this.ChangeHandle}
+            />
+          </div>
+
+          <div className="edit-form-group">
             <label htmlFor="num">Contact No.</label>
             <input
               type="text"
@@ -114,22 +112,14 @@ class DocEdit extends Component {
           </div>
 
           <div className="edit-form-group">
-            <label htmlFor="cnic">CNIC</label>
-            <input
-              type="text"
-              id="cnic"
-              value={this.state.cnic}
-              onChange={this.ChangeHandle}
-            />
-          </div>
-
-          <div className="edit-form-group">
             <label htmlFor="email">Email</label>
             <input
               type="email"
               id="email"
               value={this.state.email}
-              onChange={this.ChangeHandle}
+              readOnly
+              disabled
+              title="Email is your login and is managed by the administrator"
             />
           </div>
 
@@ -137,7 +127,6 @@ class DocEdit extends Component {
             <input
               type="submit"
               value="Save Changes"
-              onSubmit={this.SubmissionHandle}
               className="btn-emrs-save"
             />
             <NavLink to="/d/profile">
