@@ -125,6 +125,21 @@ code {
   padding: 0 24px;
   box-shadow: var(--shadow-sm);
   flex-shrink: 0;
+  gap: 16px;
+}
+
+.upper-bar-user {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  border-radius: var(--radius);
+  background: var(--clr-primary-light);
+  color: var(--clr-text);
+  border: 1px solid rgba(21, 101, 168, 0.18);
+  font-size: 0.9rem;
+  font-weight: 700;
+  white-space: nowrap;
 }
 
 .upper-bar-btn {

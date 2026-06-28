@@ -10,7 +10,7 @@ const NavBar = () => (
     </div>
     <div className="sidenav-header">
       <p className="sidenav-kicker">Healthcare Portal</p>
-      <h3 className="sidenav-title">Doctor Menu</h3>
+      <h3 className="sidenav-title">Doctor Account</h3>
     </div>
     <ul>
       <li>

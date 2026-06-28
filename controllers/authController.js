@@ -61,6 +61,68 @@ exports.logout = function (req, res) {
   });
 };
 
+// Returns the current signed-in user's display details for the UI.
+exports.currentUser = async function (req, res) {
+  if (!req.user) {
+    res.status(401).json({ status: "error", message: "Not authenticated" });
+    return;
+  }
+
+  try {
+    const { role, email } = req.user;
+
+    if (role === "doctor") {
+      const doctor = await db.oneOrNone(
+        "select f_name, l_name, email from doctor where email = $1;",
+        [email]
+      );
+
+      res.json({
+        status: "ok",
+        user: {
+          role,
+          email,
+          displayName: doctor
+            ? [doctor.f_name, doctor.l_name].filter(Boolean).join(" ") || doctor.email
+            : email,
+        },
+      });
+      return;
+    }
+
+    if (role === "patient") {
+      const patient = await db.oneOrNone(
+        "select f_name, l_name, email from patient where email = $1;",
+        [email]
+      );
+
+      res.json({
+        status: "ok",
+        user: {
+          role,
+          email,
+          displayName: patient
+            ? [patient.f_name, patient.l_name].filter(Boolean).join(" ") || patient.email
+            : email,
+        },
+      });
+      return;
+    }
+
+    res.json({
+      status: "ok",
+      user: {
+        role,
+        email,
+        displayName: email,
+      },
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ status: "error", message: "Failed to load current user" });
+  }
+};
+
 //Handles user redirect after google authentication is completed
 exports.googleRedirect = function (req, res) {
   const role = req.user.role;

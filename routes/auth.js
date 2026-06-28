@@ -9,6 +9,11 @@ router.get("/logout", (req, res) => {
   authController.logout(req, res);
 });
 
+// Current signed-in user details
+router.get("/me", (req, res) => {
+  authController.currentUser(req, res);
+});
+
 /*
 // Authentication with Google
 // router.get("/google", passport.authenticate("google", { scope: ["email"] }));
