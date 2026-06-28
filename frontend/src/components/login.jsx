@@ -11,6 +11,7 @@ class Login extends React.Component {
       regEmail: "",
       regPassword: "",
       regUsername: "",
+      regRole: "patient",
       registering: false,
       message: "",
     };
@@ -47,17 +48,26 @@ class Login extends React.Component {
 
   handleRegister = async (e) => {
     e.preventDefault();
-    const { regEmail, regPassword, regUsername } = this.state;
+    const { regEmail, regPassword, regUsername, regRole } = this.state;
     try {
       const res = await fetch("http://localhost:5000/auth/local/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: regEmail, password: regPassword, username: regUsername }),
+        body: JSON.stringify({
+          email: regEmail,
+          password: regPassword,
+          username: regUsername,
+          role: regRole,
+        }),
         credentials: "include",
       });
       const data = await res.json();
       if (data.success) {
-        window.location.href = "/newprofile";
+        if (regRole === "doctor") {
+          window.location.href = "/d/profile";
+        } else {
+          window.location.href = "/newprofile";
+        }
       } else {
         this.setState({ message: data.message || "Registration failed" });
       }
@@ -71,7 +81,7 @@ class Login extends React.Component {
   };
 
   render() {
-    const { email, password, regEmail, regPassword, regUsername, registering, message } = this.state;
+    const { email, password, regEmail, regPassword, regUsername, regRole, registering, message } = this.state;
     return (
       <div className="container-fluid MainContainer">
         <div className="card CardStyle">
@@ -138,6 +148,16 @@ class Login extends React.Component {
                       onChange={this.handleChange}
                       required
                     />
+                    <label htmlFor="regRole" className="sr-only">Role</label>
+                    <select
+                      id="regRole"
+                      name="regRole"
+                      value={regRole}
+                      onChange={this.handleChange}
+                    >
+                      <option value="patient">Patient</option>
+                      <option value="doctor">Doctor</option>
+                    </select>
                     <button type="submit" className="btn btn-success">Register</button>
                     <button type="button" className="btn btn-link" onClick={this.toggleRegister}>
                       Back to login

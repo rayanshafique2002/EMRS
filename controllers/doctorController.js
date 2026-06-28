@@ -47,11 +47,13 @@ exports.getProfile = function (req, res) {
 //Updates the doctor's information with the provided variables in body
 exports.editProfile = function (req, res) {
   const id = req.user.tid;
-  const { fname, lname, num } = req.body;
-  db.none("update doctor set f_name=$1,l_name=$2,phone_num=$3 where id = $4;", [
+  const { fname, lname, num, cnic, email } = req.body;
+  db.none("update doctor set f_name=$1,l_name=$2,phone_num=$3,cnic=$4,email=$5 where id = $6;", [
     fname,
     lname,
     num,
+    cnic,
+    email,
     id,
   ])
     .then(() => {

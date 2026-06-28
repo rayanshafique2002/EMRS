@@ -65,6 +65,8 @@ class DocProfile extends Component {
               fname: this.state.fname,
               lname: this.state.lname,
               contact: this.state.num,
+              cnic: this.state.cnic,
+              email: this.state.email,
             },
           }}
         >
